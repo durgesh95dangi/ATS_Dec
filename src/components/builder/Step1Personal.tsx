@@ -9,13 +9,15 @@ import { Label } from '@/components/ui/Label';
 import { Button } from '@/components/ui/Button';
 
 const personalSchema = z.object({
-    fullName: z.string().min(2, "Name is required"),
-    title: z.string().min(2, "Professional title is required"),
+    firstName: z.string().min(2, "First name is required"),
+    lastName: z.string().min(2, "Last name is required"),
+    title: z.string().min(2, "Desired job title is required"),
     email: z.string().email("Invalid email"),
     phone: z.string().min(5, "Phone is required"),
-    location: z.string().optional(),
-    linkedin: z.string().url().optional().or(z.literal('')),
-    portfolio: z.string().url().optional().or(z.literal('')),
+    country: z.string().optional(),
+    city: z.string().optional(),
+    address: z.string().optional(),
+    postCode: z.string().optional(),
 });
 
 type PersonalData = z.infer<typeof personalSchema>;
@@ -32,68 +34,76 @@ export function Step1Personal({ initialData, onNext }: Step1Props) {
     });
 
     return (
-        <form onSubmit={handleSubmit(onNext)} className="space-y-6 bg-white p-6 rounded-lg shadow-sm border border-gray-200 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <form onSubmit={handleSubmit(onNext, (errors) => console.error("Step1 Validation Errors:", errors))} className="space-y-6 bg-white p-6 rounded-lg shadow-sm border border-slate-200">
             <div className="mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 border-l-4 border-blue-600 pl-3">Personal Details</h2>
-                <p className="text-gray-500 mt-1 pl-4">Start with the basics. This information appears at the top of your resume.</p>
+                <h2 className="text-2xl font-bold text-slate-800">Contacts</h2>
+                <p className="text-slate-500 mt-1">Add your up-to-date contact information so employers and recruiters can easily reach you.</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Full Name */}
+                {/* First Name */}
                 <div className="space-y-2">
-                    <Label htmlFor="fullName">Full Name</Label>
-                    <Input id="fullName" {...register('fullName')} error={!!errors.fullName} placeholder="e.g. John Doe" />
-                    {errors.fullName && <p className="text-xs text-red-500">{errors.fullName.message}</p>}
+                    <Label htmlFor="firstName">First name</Label>
+                    <Input id="firstName" {...register('firstName')} error={!!errors.firstName} placeholder="e.g. Riley" />
+                    {errors.firstName && <p className="text-xs text-red-500">{errors.firstName.message}</p>}
                 </div>
 
-                {/* Professional Title */}
+                {/* Last Name */}
                 <div className="space-y-2">
-                    <Label htmlFor="title">Professional Title</Label>
-                    <Input id="title" {...register('title')} error={!!errors.title} placeholder="e.g. Senior Software Engineer" />
+                    <Label htmlFor="lastName">Last name</Label>
+                    <Input id="lastName" {...register('lastName')} error={!!errors.lastName} placeholder="e.g. Taylor" />
+                    {errors.lastName && <p className="text-xs text-red-500">{errors.lastName.message}</p>}
+                </div>
+
+                {/* Desired Job Title */}
+                <div className="col-span-1 md:col-span-2 space-y-2">
+                    <Label htmlFor="title">Desired job title</Label>
+                    <Input id="title" {...register('title')} error={!!errors.title} placeholder="e.g. Accountant" />
                     {errors.title && <p className="text-xs text-red-500">{errors.title.message}</p>}
-                </div>
-
-                {/* Email */}
-                <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" {...register('email')} error={!!errors.email} placeholder="john@example.com" />
-                    {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
                 </div>
 
                 {/* Phone */}
                 <div className="space-y-2">
                     <Label htmlFor="phone">Phone</Label>
-                    <Input id="phone" {...register('phone')} error={!!errors.phone} placeholder="+1 234 567 890" />
+                    <Input id="phone" {...register('phone')} error={!!errors.phone} placeholder="305-123-44444" />
                     {errors.phone && <p className="text-xs text-red-500">{errors.phone.message}</p>}
                 </div>
 
-                {/* Location */}
+                {/* Email */}
                 <div className="space-y-2">
-                    <Label htmlFor="location">Location (Optional)</Label>
-                    <Input id="location" {...register('location')} error={!!errors.location} placeholder="City, Country" />
+                    <Label htmlFor="email">Email</Label>
+                    <Input id="email" type="email" {...register('email')} error={!!errors.email} placeholder="e.g.mail@example.com" />
+                    {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
                 </div>
 
-                {/* Empty spacer for grid alignment */}
-                <div className="hidden md:block"></div>
-
-                {/* LinkedIn */}
+                {/* Country */}
                 <div className="space-y-2">
-                    <Label htmlFor="linkedin">LinkedIn URL (Optional)</Label>
-                    <Input id="linkedin" {...register('linkedin')} error={!!errors.linkedin} placeholder="https://linkedin.com/in/..." />
-                    {errors.linkedin && <p className="text-xs text-red-500">{errors.linkedin.message}</p>}
+                    <Label htmlFor="country">Country</Label>
+                    <Input id="country" {...register('country')} error={!!errors.country} placeholder="USA" />
                 </div>
 
-                {/* Portfolio */}
+                {/* City */}
                 <div className="space-y-2">
-                    <Label htmlFor="portfolio">Portfolio URL (Optional)</Label>
-                    <Input id="portfolio" {...register('portfolio')} error={!!errors.portfolio} placeholder="https://myportfolio.com" />
-                    {errors.portfolio && <p className="text-xs text-red-500">{errors.portfolio.message}</p>}
+                    <Label htmlFor="city">City</Label>
+                    <Input id="city" {...register('city')} error={!!errors.city} placeholder="New York" />
+                </div>
+
+                {/* Address */}
+                <div className="space-y-2">
+                    <Label htmlFor="address">Address</Label>
+                    <Input id="address" {...register('address')} error={!!errors.address} />
+                </div>
+
+                {/* Post Code */}
+                <div className="space-y-2">
+                    <Label htmlFor="postCode">Post code</Label>
+                    <Input id="postCode" {...register('postCode')} error={!!errors.postCode} />
                 </div>
             </div>
 
             <div className="flex justify-end pt-6 border-t mt-6">
-                <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8">
-                    Next: Summary & Skills
+                <Button type="submit" className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-8">
+                    Next: Experience
                 </Button>
             </div>
         </form>

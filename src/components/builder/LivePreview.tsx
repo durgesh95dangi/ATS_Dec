@@ -11,17 +11,19 @@ export function LivePreview({ data }: { data: any }) {
     const { personal, summary, skills, experience, education, certifications, projects, languages } = data;
 
     return (
-        <div className={`bg-white p-8 min-h-[1000px] text-gray-900 ${inter.className} text-[11pt] leading-normal shadow-lg print:shadow-none max-w-[210mm] mx-auto`}>
+        <div id="resume-preview" className={`bg-white p-6 min-h-[1000px] text-gray-900 ${inter.className} text-[11pt] leading-normal shadow-lg print:shadow-none max-w-[210mm] mx-auto`}>
             {/* Header */}
             <header className="mb-6 border-b-2 border-gray-900 pb-4">
-                <h1 className="text-3xl font-bold uppercase tracking-wide mb-1">{personal?.fullName || "Your Name"}</h1>
+                <h1 className="text-3xl font-bold uppercase tracking-wide mb-1">
+                    {personal?.firstName} {personal?.lastName}
+                </h1>
                 <p className="text-lg font-medium mb-1">{personal?.title || "Professional Title"}</p>
                 <div className="text-sm flex flex-wrap gap-2 text-gray-700">
                     {personal?.email && <span>{personal.email}</span>}
                     {personal?.phone && <span>• {personal.phone}</span>}
-                    {personal?.location && <span>• {personal.location}</span>}
-                    {personal?.linkedin && <span>• {personal.linkedin}</span>}
-                    {personal?.portfolio && <span>• {personal.portfolio}</span>}
+                    {(personal?.city || personal?.country) && (
+                        <span>• {[personal.address, personal.city, personal.country, personal.postCode].filter(Boolean).join(', ')}</span>
+                    )}
                 </div>
             </header>
 

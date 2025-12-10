@@ -27,7 +27,7 @@ export function JobDescriptionInput({ onNext, onSkip, isLoading }: JobDescriptio
                     <Textarea
                         id="jdText"
                         placeholder="Paste the job description here..."
-                        className="min-h-[200px]"
+                        className="min-h-52"
                         value={jdText}
                         onChange={(e) => setJdText(e.target.value)}
                     />

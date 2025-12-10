@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -8,16 +7,27 @@ import { Step3Experience } from './Step3Experience';
 import { Step4Education } from './Step4Education';
 import { Step5Finalize } from './Step5Finalize';
 import { LivePreview } from './LivePreview';
+import { DownloadButton } from '../resume/DownloadButton';
 
 interface ResumeBuilderWizardProps {
     initialData?: any;
-    onSave: (data: any) => Promise<void>;
+    onSave: (data: any, status?: string) => Promise<void>;
 }
 
 export function ResumeBuilderWizard({ initialData, onSave }: ResumeBuilderWizardProps) {
     const [currentStep, setCurrentStep] = useState(1);
     const [resumeData, setResumeData] = useState(initialData || {
-        personal: {},
+        personal: {
+            firstName: '',
+            lastName: '',
+            title: '',
+            email: '',
+            phone: '',
+            country: '',
+            city: '',
+            address: '',
+            postCode: ''
+        },
         summary: '',
         skills: { core: [], tools: [], soft: [] },
         experience: [],
@@ -30,21 +40,36 @@ export function ResumeBuilderWizard({ initialData, onSave }: ResumeBuilderWizard
     const [isSaving, setIsSaving] = useState(false);
 
     const handleNext = async (stepData: any) => {
+        console.log('handleNext: Started with data:', stepData);
         const updatedData = { ...resumeData, ...stepData };
         setResumeData(updatedData);
 
         // Autosave
         setIsSaving(true);
+        console.log('handleNext: Calling onSave...');
         try {
-            await onSave(updatedData);
+            await onSave(updatedData); // Default status is draft
+            console.log('handleNext: onSave completed');
         } catch (error) {
             console.error("Autosave failed", error);
+            // We proceed anyway
         } finally {
             setIsSaving(false);
         }
 
+        console.log('handleNext: Checking step increment. Current:', currentStep);
         if (currentStep < 5) {
-            setCurrentStep(currentStep + 1);
+            console.log('handleNext: Incrementing step to:', currentStep + 1);
+            setCurrentStep((prev) => prev + 1);
+        } else {
+            console.log('handleNext: End of wizard');
+            // Final save with completed status
+            try {
+                await onSave(updatedData, 'completed');
+            } catch (e) {
+                console.error("Final save failed", e);
+            }
+            setCurrentStep((prev) => prev + 1);
         }
     };
 
@@ -55,9 +80,9 @@ export function ResumeBuilderWizard({ initialData, onSave }: ResumeBuilderWizard
     };
 
     return (
-        <div className="max-w-4xl mx-auto min-h-screen grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="w-full max-w-[1600px] mx-auto min-h-screen grid grid-cols-1 lg:grid-cols-12 gap-8">
             {/* Main Form Area */}
-            <div className="md:col-span-2 space-y-6">
+            <div className="lg:col-span-6 xl:col-span-6 space-y-6">
                 {/* Progress Bar */}
                 <div className="flex justify-between items-center mb-8">
                     <div className="flex gap-2">
@@ -124,14 +149,17 @@ export function ResumeBuilderWizard({ initialData, onSave }: ResumeBuilderWizard
                 {currentStep > 5 && (
                     <div className="p-8 border rounded-lg bg-green-50 text-center border-green-100">
                         <h2 className="text-xl font-bold text-green-800 mb-4">Resume Completed!</h2>
-                        <p className="text-green-700">Your information has been saved.</p>
-                        <p className="text-sm mt-4 text-green-600">The PDF preview is ready for download.</p>
+                        <p className="text-green-700 mb-6">Your information has been saved successfully.</p>
+
+                        <div className="flex justify-center gap-4">
+                            <DownloadButton />
+                        </div>
                     </div>
                 )}
             </div>
 
             {/* Live Preview */}
-            <div className="hidden md:block bg-gray-100 p-8 rounded-lg sticky top-4 h-[calc(100vh-2rem)] overflow-y-auto border border-gray-200">
+            <div className="hidden lg:block lg:col-span-6 xl:col-span-6 bg-gray-100 p-8 rounded-lg sticky top-4 h-[calc(100vh-2rem)] overflow-y-auto border border-gray-200">
                 <div className="flex justify-between items-center mb-4">
                     <h3 className="font-bold text-gray-700">Live ATS Preview</h3>
                     <div className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">Single Column ATS-Optimized</div>

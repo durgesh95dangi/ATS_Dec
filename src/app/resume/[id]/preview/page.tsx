@@ -52,10 +52,9 @@ export default function ResumePreviewPage() {
                 {/* Toolbar */}
                 <div className="flex items-center justify-between mb-6 print:hidden">
                     <div className="flex items-center gap-4">
-                        <Link href={`/resume/${params.id}/edit`}>
-                            <Button variant="ghost" size="sm">
-                                <ArrowLeft className="mr-2 h-4 w-4" />
-                                Edit Content
+                        <Link href="/dashboard">
+                            <Button variant="ghost" size="icon">
+                                <ArrowLeft className="h-4 w-4" />
                             </Button>
                         </Link>
                         <h1 className="text-lg font-semibold text-slate-800 hidden sm:block">
@@ -63,6 +62,11 @@ export default function ResumePreviewPage() {
                         </h1>
                     </div>
                     <div className="flex items-center gap-3">
+                        <Link href={`/resume/${params.id}/edit`}>
+                            <Button variant="outline" size="sm">
+                                Edit Content
+                            </Button>
+                        </Link>
                         <DownloadButton />
                     </div>
                 </div>
@@ -70,7 +74,7 @@ export default function ResumePreviewPage() {
                 {/* Main Content */}
                 <div className="flex-1 overflow-auto print:overflow-visible">
                     <div className="flex justify-center items-start pb-8">
-                        <div className="scale-[0.8] sm:scale-100 origin-top transition-transform duration-200">
+                        <div className="scale-[0.9] md:scale-100 lg:scale-110 origin-top transition-transform duration-200">
                             <ResumePreview data={resume.content} />
                         </div>
                     </div>

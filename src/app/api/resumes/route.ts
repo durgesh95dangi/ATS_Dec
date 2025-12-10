@@ -13,8 +13,8 @@ export async function POST(request: Request) {
         const body = await request.json();
         const { role, experienceLevel, targetRole } = body;
 
-        if (!role || !experienceLevel) {
-            return NextResponse.json({ error: 'Role and Experience Level are required' }, { status: 400 });
+        if (!role) {
+            return NextResponse.json({ error: 'Role is required' }, { status: 400 });
         }
 
         const [newResume] = await db.insert(resumes).values({

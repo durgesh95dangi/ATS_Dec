@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/Button';
 import { Download, Loader2 } from 'lucide-react';
 import { useState } from 'react';
-import html2canvas from 'html2canvas';
+import { toPng } from 'html-to-image';
 import jsPDF from 'jspdf';
 
 export function DownloadButton() {
@@ -19,16 +19,15 @@ export function DownloadButton() {
         try {
             setIsGenerating(true);
 
-            // Capture the element as a canvas
-            const canvas = await html2canvas(element, {
-                scale: 2, // Higher scale for better quality
-                useCORS: true, // Handle images from other domains if any
-                logging: false,
-                windowWidth: element.scrollWidth,
-                windowHeight: element.scrollHeight
-            } as any); // Cast to any to avoid type error with scale if types are outdated
+            // Give the UI a moment to update state before heavy work
+            await new Promise(resolve => setTimeout(resolve, 100));
 
-            const imgData = canvas.toDataURL('image/png');
+            // Use html-to-image instead of html2canvas
+            const dataUrl = await toPng(element, {
+                quality: 0.95,
+                pixelRatio: 2, // Better resolution
+                backgroundColor: '#ffffff', // Ensure white background
+            });
 
             // A4 dimensions in mm
             const pdfWidth = 210;
@@ -36,16 +35,11 @@ export function DownloadButton() {
 
             const pdf = new jsPDF('p', 'mm', 'a4');
 
-            const imgWidth = pdfWidth;
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            // Calculate height based on A4 width and element aspect ratio
+            const pdfImageWidth = pdfWidth;
+            const pdfImageHeight = (element.scrollHeight * pdfWidth) / element.scrollWidth;
 
-            // If content is shorter than A4, it will just fit. 
-            // If longer, we might need multiple pages, but requirements said "full-page single image".
-            // We'll scale to fit width and let height be what it is, but for A4 strictness we might want to fit or crop.
-            // The requirement says: "Adjust width/height ratio to 210 x 297 mm".
-            // Let's stick to fitting width and adding image.
-
-            pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+            pdf.addImage(dataUrl, 'PNG', 0, 0, pdfImageWidth, pdfImageHeight);
             pdf.save('resume.pdf');
 
         } catch (error) {

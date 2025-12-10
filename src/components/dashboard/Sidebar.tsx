@@ -7,17 +7,15 @@ import {
     LayoutDashboard,
     FileText,
     Settings,
-    ChevronLeft,
-    ChevronRight,
+    User,
     X,
-    User
+    Briefcase
 } from 'lucide-react';
+import { Tooltip } from '@/components/ui/Tooltip';
 
 interface SidebarProps {
     isMobileOpen: boolean;
     setIsMobileOpen: (open: boolean) => void;
-    isCollapsed: boolean;
-    setIsCollapsed: (collapsed: boolean) => void;
 }
 
 const navigation = [
@@ -29,8 +27,6 @@ const navigation = [
 export function Sidebar({
     isMobileOpen,
     setIsMobileOpen,
-    isCollapsed,
-    setIsCollapsed,
 }: SidebarProps) {
     const pathname = usePathname();
 
@@ -50,63 +46,66 @@ export function Sidebar({
                     'fixed inset-y-0 left-0 z-50 flex flex-col bg-slate-900 text-slate-100 transition-all duration-300 ease-in-out',
                     // Mobile: slide in/out
                     isMobileOpen ? 'translate-x-0' : '-translate-x-full',
-                    // Desktop: static, width change
-                    'md:translate-x-0 md:static',
-                    isCollapsed ? 'md:w-20' : 'md:w-64'
+                    // Desktop: static, fixed width (collapsed)
+                    'md:translate-x-0 md:static md:w-20'
                 )}
             >
                 {/* Sidebar Header */}
                 <div className="flex h-16 items-center justify-between px-4 border-b border-slate-800">
-                    <span
-                        className={cn(
-                            'text-xl font-bold transition-opacity duration-300',
-                            isCollapsed ? 'md:opacity-0 md:hidden' : 'opacity-100'
-                        )}
-                    >
-                        ATS Resume
-                    </span>
+                    <div className="flex w-full justify-center md:hidden">
+                        <span className="text-xl font-bold">ATS Resume</span>
+                    </div>
+                    {/* Desktop Logo/Icon */}
+                    <div className="hidden md:flex w-full justify-center">
+                        <Briefcase className="h-8 w-8 text-blue-500" />
+                    </div>
+
                     {/* Mobile Close Button */}
                     <button
                         onClick={() => setIsMobileOpen(false)}
-                        className="md:hidden p-1 rounded-md hover:bg-slate-800 text-slate-300"
+                        className="md:hidden p-1 rounded-md hover:bg-slate-800 text-slate-300 absolute right-4"
                     >
                         <X className="h-6 w-6" />
                     </button>
                 </div>
 
                 {/* Navigation Links */}
-                <nav className="flex-1 space-y-1 p-4 overflow-y-auto">
+                <nav className="flex-1 space-y-2 p-4 overflow-y-auto md:overflow-visible flex flex-col items-center">
                     {navigation.map((item) => {
                         const isActive = pathname === item.href;
-                        return (
+
+                        const LinkContent = (
                             <Link
-                                key={item.name}
                                 href={item.href}
                                 className={cn(
-                                    'flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors',
+                                    'flex items-center justify-center rounded-md p-3 text-sm font-medium transition-colors w-full',
                                     isActive
                                         ? 'bg-slate-800 text-white'
-                                        : 'text-slate-300 hover:bg-slate-800 hover:text-white',
-                                    isCollapsed && 'md:justify-center md:px-2'
+                                        : 'text-slate-300 hover:bg-slate-800 hover:text-white'
                                 )}
-                                title={isCollapsed ? item.name : undefined}
                             >
                                 <item.icon
-                                    className={cn(
-                                        'h-6 w-6 flex-shrink-0',
-                                        !isCollapsed && 'mr-3'
-                                    )}
+                                    className="h-6 w-6 flex-shrink-0"
                                     aria-hidden="true"
                                 />
-                                <span
-                                    className={cn(
-                                        'transition-opacity duration-300',
-                                        isCollapsed ? 'md:hidden' : 'block'
-                                    )}
-                                >
-                                    {item.name}
-                                </span>
+                                {/* Label for mobile only */}
+                                <span className="ml-3 md:hidden">{item.name}</span>
                             </Link>
+                        );
+
+                        return (
+                            <div key={item.name} className="w-full flex justify-center">
+                                {/* Desktop Tooltip */}
+                                <div className="hidden md:block">
+                                    <Tooltip content={item.name} side="right">
+                                        {LinkContent}
+                                    </Tooltip>
+                                </div>
+                                {/* Mobile No Tooltip */}
+                                <div className="md:hidden w-full">
+                                    {LinkContent}
+                                </div>
+                            </div>
                         );
                     })}
                 </nav>

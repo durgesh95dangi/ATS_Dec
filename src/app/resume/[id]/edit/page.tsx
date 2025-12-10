@@ -1,14 +1,18 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { Wizard } from '@/components/onboarding/Wizard';
+import { useEffect, useState, use } from 'react';
+import { useRouter } from 'next/navigation';
+import { ResumeBuilderWizard } from '@/components/builder/ResumeBuilderWizard';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { fetchWithTimeout } from '@/lib/utils';
-import { ResumeSchema } from '@/lib/resume-schema';
+import { Loader2 } from 'lucide-react';
 
-export default function EditResumePage() {
-    const params = useParams();
+interface EditResumePageProps {
+    params: Promise<{ id: string }>;
+}
+
+export default function EditResumePage({ params }: EditResumePageProps) {
+    const { id } = use(params);
     const router = useRouter();
     const [resume, setResume] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -17,14 +21,26 @@ export default function EditResumePage() {
     useEffect(() => {
         async function fetchResume() {
             try {
-                const res = await fetchWithTimeout(`/api/resumes/${params.id}`);
+                const res = await fetchWithTimeout(`/api/resumes/${id}`);
                 if (res.ok) {
                     const data = await res.json();
-                    // Parse content if it's a string
-                    if (typeof data.content === 'string') {
-                        data.content = JSON.parse(data.content);
+
+                    // Parse content if it's a string, otherwise use as is
+                    let content = data.content;
+                    if (typeof content === 'string') {
+                        try {
+                            content = JSON.parse(content);
+                        } catch (e) {
+                            console.error('Error parsing resume content:', e);
+                            content = {};
+                        }
                     }
-                    setResume(data);
+
+                    // Ensure we have a valid object structure for the wizard
+                    setResume({
+                        ...data,
+                        content: content || {}
+                    });
                 } else {
                     setError('Failed to fetch resume');
                 }
@@ -36,41 +52,43 @@ export default function EditResumePage() {
             }
         }
 
-        if (params.id) {
+        if (id) {
             fetchResume();
         }
-    }, [params.id]);
+    }, [id]);
 
-    const handleUpdate = async (data: ResumeSchema) => {
-        setIsLoading(true);
+    const handleSave = async (data: any, status: string = 'draft') => {
         try {
-            const res = await fetchWithTimeout(`/api/resumes/${params.id}`, {
+            const res = await fetchWithTimeout(`/api/resumes/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     content: data,
-                    role: resume.role, // Preserve role
-                    status: 'completed'
+                    // If status is passed as completed (final step), update it
+                    ...(status === 'completed' && { status: 'completed' })
                 }),
             });
 
-            if (res.ok) {
-                router.push(`/resume/${params.id}/preview`);
-            } else {
+            if (!res.ok) {
                 throw new Error('Failed to update resume');
+            }
+
+            // If it was a 'completed' save (final step), redirect to preview
+            if (status === 'completed') {
+                router.push(`/resume/${id}/preview`);
             }
         } catch (error) {
             console.error('Error updating resume:', error);
-            setError('Failed to update resume. Please try again.');
-            setIsLoading(false);
+            // Optionally set error state here if you want to show it in the UI
+            // But usually autosave fails silently or shows a toast
         }
     };
 
     if (isLoading) {
         return (
             <DashboardLayout>
-                <div className="flex items-center justify-center h-full">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <div className="flex items-center justify-center h-screen">
+                    <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
                 </div>
             </DashboardLayout>
         );
@@ -79,7 +97,7 @@ export default function EditResumePage() {
     if (error || !resume) {
         return (
             <DashboardLayout>
-                <div className="flex items-center justify-center h-full text-red-600">
+                <div className="flex items-center justify-center h-screen text-red-600">
                     {error || 'Resume not found'}
                 </div>
             </DashboardLayout>
@@ -88,16 +106,14 @@ export default function EditResumePage() {
 
     return (
         <DashboardLayout>
-            <div className="max-w-4xl mx-auto py-8">
-                <div className="mb-8">
-                    <h1 className="text-2xl font-bold text-slate-800">Edit Resume</h1>
-                    <p className="text-slate-600">Update your resume details below.</p>
-                </div>
-
-                <Wizard
-                    role={resume.role || 'Full Stack Developer'} // Fallback if role missing
+            <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
+                {/* 
+                  ResumeBuilderWizard expects initialData to be the *content* object structure 
+                  (personal, experience, etc.) which we parsed into resume.content
+                */}
+                <ResumeBuilderWizard
                     initialData={resume.content}
-                    onComplete={handleUpdate}
+                    onSave={handleSave}
                 />
             </div>
         </DashboardLayout>

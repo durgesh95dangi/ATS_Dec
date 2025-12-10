@@ -7,11 +7,9 @@ import { useRouter } from 'next/navigation';
 
 interface HeaderProps {
     onMobileMenuClick: () => void;
-    onDesktopCollapseClick: () => void;
-    isCollapsed: boolean;
 }
 
-export function Header({ onMobileMenuClick, onDesktopCollapseClick, isCollapsed }: HeaderProps) {
+export function Header({ onMobileMenuClick }: HeaderProps) {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
@@ -45,15 +43,6 @@ export function Header({ onMobileMenuClick, onDesktopCollapseClick, isCollapsed 
                 <button
                     onClick={onMobileMenuClick}
                     className="md:hidden p-2 rounded-md text-slate-600 hover:bg-slate-100"
-                >
-                    <Menu className="h-6 w-6" />
-                </button>
-
-                {/* Desktop Collapse Button */}
-                <button
-                    onClick={onDesktopCollapseClick}
-                    className="hidden md:block p-2 rounded-md text-slate-600 hover:bg-slate-100"
-                    title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
                 >
                     <Menu className="h-6 w-6" />
                 </button>

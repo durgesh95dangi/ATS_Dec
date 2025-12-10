@@ -2,23 +2,18 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { RoleSelection } from '@/components/onboarding/RoleSelection';
-import { JobDescriptionInput } from '@/components/onboarding/JobDescriptionInput';
 import { StartingPoint } from '@/components/onboarding/StartingPoint';
-import { Wizard } from '@/components/onboarding/Wizard';
 import { ResumeBuilderWizard } from '@/components/builder/ResumeBuilderWizard';
 import { FormError } from '@/components/ui/FormError';
 import { fetchWithTimeout } from '@/lib/utils';
 import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 
-type Step = 'role' | 'jd' | 'start' | 'wizard';
+type Step = 'start' | 'wizard';
 
 export default function OnboardingPage() {
     const router = useRouter();
-    const [step, setStep] = useState<Step>('role');
+    const [step, setStep] = useState<Step>('start');
     const [resumeId, setResumeId] = useState<string | null>(null);
-    const [role, setRole] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | undefined>('');
     const [profileData, setProfileData] = useState<any>(null);
 
@@ -37,49 +32,6 @@ export default function OnboardingPage() {
         fetchProfile();
     }, []);
 
-    const handleRoleSelect = async (data: { role: string; experienceLevel: string; targetRole: string }) => {
-        setIsLoading(true);
-        setError('');
-        try {
-            const res = await fetchWithTimeout('/api/resumes', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
-            });
-
-            if (!res.ok) throw new Error('Failed to create resume');
-
-            const newResume = await res.json();
-            setResumeId(newResume.id);
-            setRole(data.role);
-            setStep('jd');
-        } catch (error) {
-            console.error('Error creating resume:', error);
-            setError('Failed to create resume. Please try again.');
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const handleJDSubmit = async (text?: string) => {
-        if (text && resumeId) {
-            setIsLoading(true);
-            setError('');
-            try {
-                await fetchWithTimeout(`/api/resumes/${resumeId}/jd`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text }),
-                });
-            } catch (error) {
-                console.error('Error saving JD:', error);
-            } finally {
-                setIsLoading(false);
-            }
-        }
-        setStep('start');
-    };
-
     const handleStartSelect = (mode: 'scratch' | 'import') => {
         if (mode === 'scratch') {
             setStep('wizard');
@@ -89,32 +41,62 @@ export default function OnboardingPage() {
     };
 
     // New autosave handler for the 5-step builder
-    const handleAutoSave = async (data: any) => {
-        if (!resumeId) return;
+    const handleAutoSave = async (data: any, status: string = 'draft') => {
+        // Only autosave if we have a resumeId (created on first save or properly handled)
+
+        if (!resumeId) {
+            console.log('handleAutoSave: No resumeId, creating new resume...');
+            try {
+                // Create minimal resume entry
+                const res = await fetchWithTimeout('/api/resumes', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title: 'Untitled Resume', role: 'General' }), // Default values
+                });
+
+                console.log('handleAutoSave: Create response status:', res.status);
+
+                if (res.ok) {
+                    const newResume = await res.json();
+                    console.log('handleAutoSave: Created resume:', newResume);
+                    setResumeId(newResume.id);
+
+                    // If we just created it, we might need to update it immediately with the content if step data was passed
+                    // But usually the first step doesn't force a save until Next is clicked.
+                } else {
+                    const err = await res.text();
+                    console.error('handleAutoSave: Create failed:', err);
+                }
+            } catch (err) {
+                console.error('Error creating initial resume:', err);
+            }
+            return;
+        }
+
         try {
-            // We store the rich JSON structure in 'content'
             await fetchWithTimeout(`/api/resumes/${resumeId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ content: data, status: 'draft' }),
+                body: JSON.stringify({ content: data, status: status }),
             });
         } catch (error) {
             console.error('Autosave error:', error);
-            // Silent error for autosave to avoid disrupting user flow, 
-            // or maybe show a toast (but we don't have a toast system ready here yet).
         }
     };
 
     const getInitialData = () => {
-        // Map profile data to new schema structure if available
         if (!profileData) return undefined;
+        // Split name if possible
+        const nameParts = (profileData.name || '').split(' ');
+        const firstName = nameParts[0] || '';
+        const lastName = nameParts.slice(1).join(' ') || '';
+
         return {
             personal: {
-                fullName: profileData.name || '',
+                firstName: firstName,
+                lastName: lastName,
                 email: profileData.email || '',
-                title: role || '', // Pre-fill title from selected role
-                // location: profileData.location || '', // removed
-                // portfolio: profileData.portfolioUrl || '', // removed from profile but kept in resume
+                title: '',
             },
             summary: profileData.headline || '',
             skills: { core: [], tools: [], soft: [] },
@@ -132,8 +114,6 @@ export default function OnboardingPage() {
                 <div className="max-w-xl mx-auto mb-6">
                     <FormError message={error} />
                 </div>
-                {step === 'role' && <RoleSelection onNext={handleRoleSelect} />}
-                {step === 'jd' && <JobDescriptionInput onNext={handleJDSubmit} onSkip={() => handleJDSubmit()} isLoading={isLoading} />}
                 {step === 'start' && <StartingPoint onSelect={handleStartSelect} />}
                 {step === 'wizard' && (
                     <ResumeBuilderWizard
@@ -145,3 +125,4 @@ export default function OnboardingPage() {
         </DashboardLayout>
     );
 }
+
