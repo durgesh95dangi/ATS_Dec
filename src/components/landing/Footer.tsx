@@ -13,13 +13,13 @@ export default function Footer() {
                             Helping job seekers build professional resumes and land their dream jobs with AI-powered tools.
                         </p>
                         <div className="flex gap-4">
-                            <Link href="#" className="hover:text-green-500 transition-colors">
+                            <Link href="#" className="hover:text-blue-500 transition-colors">
                                 <Twitter className="w-5 h-5" />
                             </Link>
-                            <Link href="#" className="hover:text-green-500 transition-colors">
+                            <Link href="#" className="hover:text-blue-500 transition-colors">
                                 <Github className="w-5 h-5" />
                             </Link>
-                            <Link href="#" className="hover:text-green-500 transition-colors">
+                            <Link href="#" className="hover:text-blue-500 transition-colors">
                                 <Linkedin className="w-5 h-5" />
                             </Link>
                         </div>
@@ -28,29 +28,29 @@ export default function Footer() {
                     <div>
                         <h4 className="text-white font-bold mb-6 font-display">Product</h4>
                         <ul className="space-y-4">
-                            <li><Link href="#features" className="hover:text-green-500 transition-colors">Features</Link></li>
-                            <li><Link href="#pricing" className="hover:text-green-500 transition-colors">Pricing</Link></li>
-                            <li><Link href="#" className="hover:text-green-500 transition-colors">Templates</Link></li>
-                            <li><Link href="#" className="hover:text-green-500 transition-colors">Examples</Link></li>
+                            <li><Link href="#features" className="hover:text-blue-500 transition-colors">Features</Link></li>
+                            <li><Link href="#pricing" className="hover:text-blue-500 transition-colors">Pricing</Link></li>
+                            <li><Link href="#" className="hover:text-blue-500 transition-colors">Templates</Link></li>
+                            <li><Link href="#" className="hover:text-blue-500 transition-colors">Examples</Link></li>
                         </ul>
                     </div>
 
                     <div>
                         <h4 className="text-white font-bold mb-6 font-display">Company</h4>
                         <ul className="space-y-4">
-                            <li><Link href="#" className="hover:text-green-500 transition-colors">About Us</Link></li>
-                            <li><Link href="#" className="hover:text-green-500 transition-colors">Blog</Link></li>
-                            <li><Link href="#" className="hover:text-green-500 transition-colors">Careers</Link></li>
-                            <li><Link href="#" className="hover:text-green-500 transition-colors">Contact</Link></li>
+                            <li><Link href="#" className="hover:text-blue-500 transition-colors">About Us</Link></li>
+                            <li><Link href="#" className="hover:text-blue-500 transition-colors">Blog</Link></li>
+                            <li><Link href="#" className="hover:text-blue-500 transition-colors">Careers</Link></li>
+                            <li><Link href="#" className="hover:text-blue-500 transition-colors">Contact</Link></li>
                         </ul>
                     </div>
 
                     <div>
                         <h4 className="text-white font-bold mb-6 font-display">Legal</h4>
                         <ul className="space-y-4">
-                            <li><Link href="#" className="hover:text-green-500 transition-colors">Privacy Policy</Link></li>
-                            <li><Link href="#" className="hover:text-green-500 transition-colors">Terms of Service</Link></li>
-                            <li><Link href="#" className="hover:text-green-500 transition-colors">Cookie Policy</Link></li>
+                            <li><Link href="#" className="hover:text-blue-500 transition-colors">Privacy Policy</Link></li>
+                            <li><Link href="#" className="hover:text-blue-500 transition-colors">Terms of Service</Link></li>
+                            <li><Link href="#" className="hover:text-blue-500 transition-colors">Cookie Policy</Link></li>
                         </ul>
                     </div>
                 </div>

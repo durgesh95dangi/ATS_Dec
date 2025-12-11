@@ -7,37 +7,37 @@ const features = [
         icon: Sparkles,
         title: "AI-Powered Suggestions",
         description: "Smart writing assistance helps you craft compelling bullet points and professional summaries instantly.",
-        color: "bg-green-50 text-green-600"
+        color: "bg-blue-50 text-blue-600"
     },
     {
         icon: Target,
         title: "ATS Optimized",
         description: "Our templates are designed to pass Applicant Tracking Systems so your resume actually reaches recruiters.",
-        color: "bg-emerald-50 text-emerald-600"
+        color: "bg-indigo-50 text-indigo-600"
     },
     {
         icon: FileText,
         title: "Professional Templates",
         description: "Choose from a variety of sleek, modern designs that highlight your skills and experience perfectly.",
-        color: "bg-teal-50 text-teal-600"
+        color: "bg-cyan-50 text-cyan-600"
     },
     {
         icon: Zap,
         title: "Instant Download",
         description: "Export your resume in PDF format with a single click, ready to be sent to your dream employer.",
-        color: "bg-lime-50 text-lime-600"
+        color: "bg-sky-50 text-sky-600"
     },
     {
         icon: Smartphone,
         title: "Mobile Friendly",
         description: "Edit your resume on the go. Our platform is fully responsive and works great on all devices.",
-        color: "bg-green-50 text-green-600"
+        color: "bg-blue-50 text-blue-600"
     },
     {
         icon: CheckCircle,
         title: "Real-time Previews",
         description: "See changes instantly as you type. No more guessing how your resume will look after export.",
-        color: "bg-emerald-50 text-emerald-600"
+        color: "bg-indigo-50 text-indigo-600"
     }
 ];
 
@@ -50,7 +50,7 @@ export default function Features() {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="inline-block mb-4 px-4 py-1.5 bg-green-50 text-green-700 rounded-full text-sm font-semibold tracking-wide font-sans"
+                        className="inline-block mb-4 px-4 py-1.5 bg-blue-50 text-blue-700 rounded-full text-sm font-semibold tracking-wide font-sans"
                     >
                         Features
                     </motion.div>
@@ -62,7 +62,7 @@ export default function Features() {
                         className="text-3xl md:text-4xl font-bold text-gray-900 mb-6 font-display"
                     >
                         Everything You Need to <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-600">Get Hired Faster</span>
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Get Hired Faster</span>
                     </motion.h2>
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}

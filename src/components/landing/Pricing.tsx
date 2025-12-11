@@ -71,7 +71,7 @@ export default function Pricing() {
                         <span className={`text-sm font-medium ${!isYearly ? 'text-gray-900' : 'text-gray-500'}`}>Monthly</span>
                         <button
                             onClick={() => setIsYearly(!isYearly)}
-                            className="relative w-14 h-8 bg-green-600 rounded-full p-1 transition-colors hover:bg-green-700 focus:outline-none"
+                            className="relative w-14 h-8 bg-blue-600 rounded-full p-1 transition-colors hover:bg-blue-700 focus:outline-none"
                         >
                             <motion.div
                                 className="w-6 h-6 bg-white rounded-full shadow-md"
@@ -80,7 +80,7 @@ export default function Pricing() {
                             />
                         </button>
                         <span className={`text-sm font-medium ${isYearly ? 'text-gray-900' : 'text-gray-500'}`}>
-                            Yearly <span className="text-green-600 text-xs font-bold ml-1 bg-green-50 px-2 py-0.5 rounded-full">-20%</span>
+                            Yearly <span className="text-blue-600 text-xs font-bold ml-1 bg-blue-50 px-2 py-0.5 rounded-full">-20%</span>
                         </span>
                     </div>
                 </div>
@@ -93,10 +93,10 @@ export default function Pricing() {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.1 }}
-                            className={`relative bg-white rounded-2xl p-8 border ${plan.popular ? 'border-green-600 shadow-xl scale-105 z-10' : 'border-gray-200 shadow-sm hover:shadow-lg'} transition-all duration-300`}
+                            className={`relative bg-white rounded-2xl p-8 border ${plan.popular ? 'border-blue-600 shadow-xl scale-105 z-10' : 'border-gray-200 shadow-sm hover:shadow-lg'} transition-all duration-300`}
                         >
                             {plan.popular && (
-                                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-green-600 text-white text-xs font-bold uppercase tracking-wide px-4 py-1.5 rounded-full shadow-sm">
+                                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-blue-600 text-white text-xs font-bold uppercase tracking-wide px-4 py-1.5 rounded-full shadow-sm">
                                     Most Popular
                                 </div>
                             )}
@@ -113,15 +113,15 @@ export default function Pricing() {
                                 </span>
                             </div>
 
-                            <button className={`w-full py-3 rounded-xl font-bold mb-8 transition-colors font-display ${plan.popular ? 'bg-green-600 text-white hover:bg-green-700 shadow-md hover:shadow-xl' : 'bg-gray-50 text-gray-900 hover:bg-gray-100 border border-gray-200'}`}>
+                            <button className={`w-full py-3 rounded-xl font-bold mb-8 transition-colors font-display ${plan.popular ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-md hover:shadow-xl' : 'bg-gray-50 text-gray-900 hover:bg-gray-100 border border-gray-200'}`}>
                                 {plan.cta}
                             </button>
 
                             <ul className="space-y-4">
                                 {plan.features.map((feature, i) => (
                                     <li key={i} className="flex items-center gap-3 text-sm text-gray-600">
-                                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-green-50 flex items-center justify-center">
-                                            <Check className="w-3.5 h-3.5 text-green-600" />
+                                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-blue-50 flex items-center justify-center">
+                                            <Check className="w-3.5 h-3.5 text-blue-600" />
                                         </div>
                                         {feature}
                                     </li>

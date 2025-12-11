@@ -23,8 +23,8 @@ export default function HowItWorks() {
     return (
         <section id="how-it-works" className="py-24 bg-gray-50 relative overflow-hidden">
             {/* Background decoration */}
-            <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-green-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
-            <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 bg-emerald-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+            <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+            <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 bg-indigo-100 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
 
             <div className="container mx-auto px-4 relative">
                 <div className="text-center max-w-3xl mx-auto mb-20">
@@ -60,7 +60,7 @@ export default function HowItWorks() {
                             transition={{ delay: index * 0.2 }}
                             className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 relative group text-center"
                         >
-                            <div className="w-16 h-16 bg-green-600 text-white text-2xl font-bold rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-green-200 group-hover:scale-110 transition-transform font-display">
+                            <div className="w-16 h-16 bg-blue-600 text-white text-2xl font-bold rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-blue-200 group-hover:scale-110 transition-transform font-display">
                                 {step.number}
                             </div>
                             <h3 className="text-xl font-bold text-gray-900 mb-3 font-display">{step.title}</h3>

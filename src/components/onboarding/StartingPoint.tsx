@@ -31,7 +31,7 @@ export function StartingPoint({ onSelect }: StartingPointProps) {
                     onClick={() => onSelect('import')}
                     className="flex flex-col items-center justify-center p-8 bg-white border border-slate-200 rounded-lg shadow-sm hover:border-blue-500 hover:ring-1 hover:ring-blue-500 transition-all group"
                 >
-                    <div className="p-4 bg-green-50 rounded-full text-green-600 mb-4 group-hover:bg-green-100">
+                    <div className="p-4 bg-blue-50 rounded-full text-blue-600 mb-4 group-hover:bg-blue-100">
                         <Upload className="h-8 w-8" />
                     </div>
                     <h3 className="text-lg font-semibold text-slate-900">Import Resume</h3>

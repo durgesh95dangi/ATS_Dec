@@ -153,7 +153,7 @@ export function Step5Finalize({ initialData, onNext, onBack }: Step5Props) {
 
             <div className="flex justify-between pt-6 border-t mt-6">
                 <Button type="button" variant="secondary" onClick={onBack}>Back</Button>
-                <Button type="submit" className="bg-green-600 hover:bg-green-700 text-white font-semibold px-8 shadow-lg shadow-green-100 flex items-center gap-2">
+                <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 shadow-lg shadow-blue-100 flex items-center gap-2">
                     <CheckCircle className="w-4 h-4" /> Finalize & Preview
                 </Button>
             </div>
